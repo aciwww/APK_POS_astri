@@ -24,7 +24,7 @@ class PenjualanController extends Controller
         // filter berdasarkan role
         ->when($user->role->name === 'kasir', function ($query) use ($user) {
             $query->where('user_id', $user->id);
-        })
+        })                                          
 
         // Search nama user
         ->when($keyword, function ($query) use ($keyword) {
@@ -84,9 +84,11 @@ class PenjualanController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Penjualan $penjualan)
     {
-        //
+    $penjualan->load(['user', 'itemPenjualan.produk']);
+
+    return view('penjualan.show', compact('penjualan'));
     }
 
     /**

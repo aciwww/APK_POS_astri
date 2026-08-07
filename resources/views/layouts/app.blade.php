@@ -22,5 +22,21 @@
 
 </div>
 
+<script>
+    setTimeout(function () {
+        document.querySelectorAll('.alert').forEach(function(alertEl) {
+            if (typeof bootstrap !== 'undefined' && bootstrap.Alert) {
+                bootstrap.Alert.getOrCreateInstance(alertEl).close();
+            } else {
+                alertEl.style.transition = 'opacity 0.5s ease';
+                alertEl.style.opacity = '0';
+                setTimeout(function() {
+                    alertEl.remove();
+                }, 500);
+            }
+        });
+    }, 3000);
+</script>
 </body>
+
 </html>

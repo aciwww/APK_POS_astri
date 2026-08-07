@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Produk\StoreRequest;
-use App\Http\Requests\Produk\updateRequest;
+use App\Http\Requests\Produk\UpdateRequest;
 use App\Http\Requests\SearchRequest;
 use App\Models\Produk;
 use Illuminate\Http\Request;
@@ -82,7 +82,7 @@ class ProdukController extends Controller
      */
     public function edit(Produk $produk)
     {
-        $this->authorize('update', $Produk);
+        $this->authorize('update', $produk);
 
         return view('produk.edit', compact('produk'));
     }
@@ -92,7 +92,7 @@ class ProdukController extends Controller
      */
     public function update(updateRequest $request, Produk $produk)
     {
-        $this->authorize('update', $Produk);
+        $this->authorize('update', $produk);
 
         $dataReq = $request->validated();
 
@@ -128,7 +128,7 @@ class ProdukController extends Controller
      */
     public function destroy(Produk $produk)
     {
-        $this->authorize('delete', $Produk);
+        $this->authorize('delete', $produk);
 
         if ($produk->foto) {
             storage::disk('public')->delete($produk->foto);
@@ -137,3 +137,5 @@ class ProdukController extends Controller
         return redirect()->route('produk.index')->with('success', 'Product deleted successfully.');
     }
 }
+
+ 

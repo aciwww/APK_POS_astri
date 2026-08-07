@@ -4,6 +4,32 @@
 
 @section('content')
 
+<style>
+    body {
+        background: linear-gradient(160deg, #E1F5EE 0%, #F7F5EE 45%, #E6F1FB 100%);
+        background-attachment: fixed;
+        min-height: 100vh;
+    }
+
+    .section-title { text-align: center; font-weight: 700; color: #20241F; margin: 40px 0 20px; }
+    .section-title .date { color: #6B6F67; font-weight: 500; }
+
+    .stat-card { background: #fff; border: 1px solid #E4E1D8; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 24px -14px rgba(28,124,84,0.25); }
+    .stat-card .stat-label { background: #E1F5EE; color: #125439; font-size: .85rem; font-weight: 500; text-align: center; padding: 12px; }
+    .stat-card .stat-value { text-align: center; padding: 20px; font-size: 1.4rem; font-weight: 700; color: #20241F; }
+
+    .table-pos { width: 100%; border-collapse: collapse; background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 24px -16px rgba(0,0,0,0.15); }
+    .table-pos thead th { background: #F7F5EE; color: #20241F; font-weight: 600; padding: 12px 16px; text-align: left; border-bottom: 1px solid #E4E1D8; }
+    .table-pos tbody td { padding: 12px 16px; border-bottom: 1px solid #E4E1D8; color: #20241F; }
+    .table-pos tbody tr:last-child td { border-bottom: none; }
+    .table-pos tbody tr:hover { background: #E1F5EE; }
+
+    .badge-stock-low { background: #FCEFD9; color: #8a5a12; padding: 3px 10px; border-radius: 20px; font-size: .8rem; font-weight: 600; }
+    .badge-stock-out { background: #FBE4E3; color: #a12a29; padding: 3px 10px; border-radius: 20px; font-size: .8rem; font-weight: 600; }
+    .badge-stock-safe { background: #E1F5EE; color: #125439; padding: 3px 10px; border-radius: 20px; font-size: .8rem; font-weight: 600; }
+    .empty-note { text-align: center; color: #6B6F67; font-style: italic; padding: 18px; }
+</style>
+
 @include('layouts.navbar')
 
 <div class="text-center">

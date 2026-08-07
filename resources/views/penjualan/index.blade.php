@@ -6,12 +6,69 @@
 
 @include('layouts.navbar')
 
+
+<style>
+    body {
+        background: linear-gradient(160deg, #E1F5EE 0%, #F7F5EE 45%, #E6F1FB 100%);
+        background-attachment: fixed;
+        min-height: 100vh;
+    }
+
+    .btn-primary {
+        background-color: #1C7C54;
+        border-color: #1C7C54;
+    }
+    .btn-primary:hover {
+        background-color: #125439;
+        border-color: #125439;
+    }
+
+    .btn-outline-secondary {
+        color: #1C7C54;
+        border-color: #1C7C54;
+    }
+    .btn-outline-secondary:hover {
+        background-color: #1C7C54;
+        border-color: #1C7C54;
+        color: #fff;
+    }
+
+    .btn-warning {
+        background-color: #E8A33D;
+        border-color: #E8A33D;
+        color: #fff;
+    }
+    .btn-warning:hover {
+        background-color: #b87a22;
+        border-color: #b87a22;
+        color: #fff;
+    }
+
+    .btn-danger {
+        background-color: #E24B4A;
+        border-color: #E24B4A;
+    }
+    .btn-danger:hover {
+        background-color: #b73534;
+        border-color: #b73534;
+    }
+
+    .table thead th {
+        background-color: #F7F5EE;
+    }
+    .table tbody tr:hover {
+        background-color: #E1F5EE;
+    }
+</style>
+
 @if(session('errors'))
         <div class="alert alert-danger">
           {{ session('errors')}}
         </div>
-    @endif      
-<h1>Halaman Penjualan</h1>
+    @endif
+
+<div class="container m-3"></div>
+<h2>Penjualan</h2>
 
 <a href="{{ route('penjualan.create') }}" class="btn btn-primary mb-3">Create</a>
 
@@ -26,7 +83,7 @@
 
         <button class="btn btn-outline-secondary" type="submit">
             Search
-        </button>       
+        </button>
     </div>
 </form>
 
@@ -45,14 +102,14 @@
   <tbody>
     @forelse($sales as $sale)
     <tr>
-      <th scope="row">{{$sales->firstItem() + $loop->index}}</th>
-      <th>{{$sale->created_at->translatedFormat('d-m-Y H:i:s')}}</th>
-      <td>{{$sale->user->name}}</td>
-      <td>Rp.{{number_format($sale->total_pembayaran)}}</td>
-      <td>{{$sale->metode_pembayaran}}</td>
-      <td>{{$sale->status}}</td>
-      <td class="d-flex gap-1">
-        <a href="" class="btn btn-primary">Detail</a>
+      <th scope="row">{{ $sales->firstItem() + $loop->index }}</th>
+      <td>{{ $sale->created_at->translatedFormat('d-m-Y H:i:s') }}</td>
+      <td>{{ $sale->user->name }}</td>
+      <td>Rp.{{ number_format($sale->total_pembayaran) }}</td>
+      <td>{{ $sale->metode_pembayaran }}</td>
+      <td>{{ $sale->status }}</td>
+      <td class="gap-1">
+        <a href="{{ route('penjualan.show', $sale) }}" class="btn btn-primary">Detail</a>
         @can('view', $sale)
         ||
         <a href="{{ route('penjualan.edit', $sale) }}" class="btn btn-warning">Edit</a>
@@ -60,21 +117,22 @@
         @can('delete', $sale)
         ||
         <form action="{{ route('penjualan.destroy', $sale) }}" method="POST" class="d-inline">
-            @csrf 
+            @csrf
             @method('DELETE')
             <button class="btn btn-danger" onclick="return confirm('Apakah anda yakin akan menghapus penjualan ini?')">
               Hapus
             </button>
-        </form>  
-        @endcan  
+        </form>
+        @endcan
       </td>
     </tr>
     @empty
     <tr>
-      <td colspan="6">Data Tidak Ditemukan</td>
+      <td colspan="7">Data Tidak Ditemukan</td>
     </tr>
     @endforelse
-    </thead>
-  <tbody>
-    {{ $sales->links() }}
+  </tbody>
+</table>
+
+{{ $sales->links() }}
 @endsection
