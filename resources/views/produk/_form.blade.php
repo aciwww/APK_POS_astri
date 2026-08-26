@@ -24,6 +24,26 @@
             @enderror            
         </div>
     </div>
+
+<div class="mb-3">
+    <label class="form-label">Nama Jenis</label>
+    <select name="jenis_id" class="form-select @error('jenis_id') is-invalid @enderror">
+        <option value="">-- Pilih Jenis --</option>
+        @foreach($jenis as $item)
+            <option value="{{ $item->id }}"
+                @selected(old('jenis_id', $produk->jenis_id ?? '') == $item->id)>
+                {{ ucfirst($item->nama ?? $item->name) }}
+            </option>     
+        @endforeach
+    </select>
+    @error('jenis_id')
+        <div class="invalid-feedback">
+            {{ $message }}
+        </div>        
+    @enderror             
+</div>
+
+    
     <div class="col">
         <div class="mb-2">
             <label>Preview Foto</label><br>
