@@ -7,6 +7,17 @@
     <!--memanggil Link bootstraps-->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
+<style>
+   body {
+        background: linear-gradient(160deg, #E1F5EE 0%, #F7F5EE 45%, #E6F1FB 100%);
+        background-attachment: fixed;
+        min-height: 100vh;
+    }
+    .btn1 {
+        background-color: #E1F5EE;
+        color: #125439;
+    }
+</style>
 <body>
     
 <div class="container">

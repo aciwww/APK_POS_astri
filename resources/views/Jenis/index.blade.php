@@ -1,118 +1,118 @@
 @extends('layouts.app')
 
-@section('title', 'Penjualan')
+@section('title', 'Jenis Produk')
 
 @section('content')
 
-<style>
-    body {
-        background: linear-gradient(160deg, #E1F5EE 0%, #F7F5EE 45%, #E6F1FB 100%);
-        background-attachment: fixed;
-        min-height: 100vh;
-    }
+@include('layouts.navbar')
 
-    .btn-primary {
-        background-color: #1C7C54;
-        border-color: #1C7C54;
-    }
-    .btn-primary:hover {
-        background-color: #125439;
-        border-color: #125439;
-    }
+<div class="container my-4">
 
-    .btn-outline-secondary {
-        color: #1C7C54;
-        border-color: #1C7C54;
-    }
-    .btn-outline-secondary:hover {
-        background-color: #1C7C54;
-        border-color: #1C7C54;
-        color: #fff;
-    }
-
-    .btn-warning {
-        background-color: #E8A33D;
-        border-color: #E8A33D;
-        color: #fff;
-    }
-    .btn-warning:hover {
-        background-color: #b87a22;
-        border-color: #b87a22;
-        color: #fff;
-    }
-
-    .btn-danger {
-        background-color: #E24B4A;
-        border-color: #E24B4A;
-    }
-    .btn-danger:hover {
-        background-color: #b73534;
-        border-color: #b73534;
-    }
-
-    .table thead th {
-        background-color: #F7F5EE;
-    }
-    .table tbody tr:hover {
-        background-color: #E1F5EE;
-    }
-</style>
+    <!-- Notifikasi Error -->
+    @if(session('errors'))
+        <div class="alert alert-danger alert-dismissible fade show mb-4" role="alert">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+            {{ session('errors') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
     
-<div class="container py-4">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h2>Daftar Jenis Produk</h2>
-        <a href="{{ route('jenis.create') }}" class="btn btn-primary">+ Tambah Jenis</a>
+    <!-- Header Page & Tombol Tambah -->
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4 pb-3 border-bottom">
+        <div>
+            <h1 class="h3 fw-bold text-dark mb-1">Daftar Jenis</h1>
+        </div>
+        <div>
+            @can('create', App\Models\Jenis::class)
+            <a href="{{ route('jenis.create') }}" class="btn btn-primary d-inline-flex align-items-center gap-2 shadow-sm px-3">
+                <i class="bi bi-plus-lg"></i>
+                <span>Tambah Jenis</span>
+            </a>
+            @endcan
+        </div>
     </div>
 
-    <table class="table table-bordered table-striped">
-        <thead class="bg-light text-uppercase text-secondary small fw-bold">
-            <tr>
-                <th>No</th>
-                <th>Nama Jenis</th>
-                <th>Dibuat Oleh (User)</th>
-                <th>Aksi</th>
-            </tr>
-        </thead>
-        <tbody>
-            @forelse($jenis as $key => $item)
-                <tr>
-                    <td>{{ $key + 1 }}</td>
-                    <td>{{ $item->nama_jenis }}</td>
-                    <td>
-                        <div class="d-flex align-items-center gap-2">
-                            <!-- Lingkaran Avatar Inisial -->
-                            <div class="bg-dark text-white rounded-circle d-flex align-items-center justify-content-center fw-bold flex-shrink-0" 
-                                style="width: 32px; height: 32px; font-size: 0.8rem;">
-                                {{ strtoupper(substr($sale->user->name ?? $item->user->name ?? 'K', 0, 1)) }}
-                            </div>
+    <!-- Filter & Form Pencarian -->
+    <div class="card border-0 shadow-sm mb-4 rounded-3">
+        <div class="card-body p-3">
+            <form action="{{ route('jenis.index') }}" method="GET">
+                <div class="input-group">
+                    <input type="text" 
+                           name="search" 
+                           value="{{ request('search') }}" 
+                           class="form-control border-end-0" 
+                           placeholder="Cari berdasarkan nama jenis...">
+                    <button class="btn btn-primary px-4" type="submit">
+                        Cari
+                    </button>
+                    @if(request('search'))
+                        <a href="{{ route('jenis.index') }}" class="btn btn-outline-secondary">Reset</a>
+                    @endif
+                </div>
+            </form>
+        </div>
+    </div>
 
-                            <!-- Nama User Sejajar Samping -->
-                            <span class="fw-semibold text-dark small">
-                                {{ $sale->user->name ?? $item->user->name ?? 'Kasir' }}
-                            </span>
-                        </div>
-                    </td>
-                    <td>
-                        <a href="{{ route('jenis.edit', $item->id) }}" class="btn btn-sm btn-outline-warning d-inline-flex align-items-center gap-1 px-2.5 py-1">Edit</a>
-                        <form action="{{ route('jenis.destroy', $item->id) }}" method="POST" class="d-inline">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" 
-                            class="btn btn-sm btn-outline-danger d-inline-flex align-items-center gap-1 px-2.5 py-1" 
-                            onclick="return confirm('Apakah Anda yakin ingin menghapus produk ini?')"
-                                title="Hapus Produk">
-                             <i class="bi bi-trash"></i>
-                            <span>Hapus</span>
-                            </button>
-                        </form>
-                    </td>
-                </tr>
-            @empty
-                <tr>
-                    <td colspan="4" class="text-center">Data jenis belum ada.</td>
-                </tr>
-            @endforelse
-        </tbody>
-    </table>
+    <!-- Tabel Data Jenis -->
+    <div class="card border-0 shadow-sm rounded-3 overflow-hidden">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light text-secondary">
+                    <tr>
+                        <th scope="col" class="ps-4" style="width: 10%;">#</th>
+                        <th scope="col" style="width: 70%;">Nama Jenis</th>
+                        <th scope="col" class="text-center pe-4" style="width: 20%;">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse ($jenis as $item)
+                    <tr>
+                        <td class="ps-4 text-muted fw-medium">
+                            {{ method_exists($jenis, 'firstItem') ? $jenis->firstItem() + $loop->index : $loop->iteration }}
+                        </td>
+                        <td class="fw-semibold text-dark">
+                            {{ $item->nama_jenis }}
+                        </td>
+                        <td class="text-center pe-4">
+                            <div class="d-inline-flex align-items-center gap-1">
+                                @can('update', $item)
+                                <a href="{{ route('jenis.edit', $item->id) }}" class="btn btn-sm btn-outline-warning">
+                                    Edit
+                                </a>
+                                @endcan
+
+                                @can('delete', $item)
+                                <form action="{{ route('jenis.destroy', $item->id) }}" method="POST" class="d-inline">
+                                    @csrf 
+                                    @method('DELETE')
+                                    <button class="btn btn-sm btn-outline-danger" onclick="return confirm('Apakah anda yakin ingin menghapus jenis ini?')">
+                                        Hapus
+                                    </button>
+                                </form>
+                                @endcan
+                            </div>
+                        </td>
+                    </tr>
+                    @empty
+                    <tr>
+                        <td colspan="3" class="text-center py-5 text-muted">
+                            <p class="mb-0 fs-5 fw-semibold text-secondary">Data jenis tidak tersedia.</p>
+                            <small>Belum ada jenis produk yang ditambahkan atau tidak sesuai dengan pencarian.</small>
+                        </td>
+                    </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Render Link Pagination jika ada -->
+        @if(method_exists($jenis, 'hasPages') && $jenis->hasPages())
+        <div class="card-footer bg-white border-top py-3 px-4">
+            {{ $jenis->links() }}
+        </div>
+        @endif
+    </div>
+
 </div>
+
 @endsection

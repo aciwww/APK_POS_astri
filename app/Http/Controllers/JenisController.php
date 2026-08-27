@@ -3,108 +3,81 @@
 namespace App\Http\Controllers;
 
 use App\Models\Jenis;
-use App\Http\Requests\UpdateJenisRequest;
+use App\Http\Requests\SearchRequest;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Storage; // <--- Import ini ditambahkan agar Storage tidak error
 
 class JenisController extends Controller
 {
-    /**
-     * Menampilkan daftar semua jenis.
-     */
-    public function index()
+    public function index(SearchRequest $request)
     {
-        $jenis = Jenis::with('user')->latest()->get();
+        $this->authorize('viewAny', Jenis::class);
+
+        $keyword = $request->input('search');
+
+        $jenis = Jenis::when($keyword, function ($query) use ($keyword) {
+                $query->where('nama_jenis', 'like', '%' . $keyword . '%');
+            })
+            ->withCount('produk')
+            ->latest()
+            ->paginate(10)
+            ->withQueryString();
+
         return view('jenis.index', compact('jenis'));
     }
 
-    /**
-     * Menampilkan form tambah jenis.
-     */
     public function create()
     {
-        return view('jenis.create');
+        $this->authorize('viewAny', Jenis::class);
+
+        // Inisialisasi model kosong untuk mode Create
+        $jenis = new Jenis();
+
+        return view('jenis.create', compact('jenis'));
     }
 
-    /**
-     * Menyimpan jenis baru ke database.
-     */
-    public function store(Request $request)
-    {
-        // Validasi input
-        $request->validate([
-            'nama_jenis' => 'required|string|max:255',
-        ]);
+   public function store(Request $request)
+{
+    $this->authorize('create', Jenis::class);
 
-        // Simpan ke database
-        Jenis::create([
-            'user_id'    => Auth::id() ?? $request->user_id,
-            'nama_jenis' => $request->nama_jenis,
-        ]);
+    $validated = $request->validate([
+        'nama_jenis' => 'required|string|max:255|unique:jenis,nama_jenis',
+    ]);
 
-        return redirect()->route('jenis.index')
-            ->with('success', 'Jenis berhasil ditambahkan.');
-    }
+    // Simpan hanya data yang sudah divalidasi (nama_jenis)
+    Jenis::create($validated);
 
-    /**
-     * Menampilkan detail 1 jenis beserta daftar produk di dalamnya.
-     */
-    public function show(Jenis $jenis)
-    {
-        // Load relasi produk dan user
-        $jenis->load(['produk', 'user']);
-
-        return view('jenis.show', compact('jenis'));
-    }
-
-    /**
-     * Menampilkan form edit jenis.
-     */
+    return redirect()->route('jenis.index')->with('success', 'Jenis berhasil ditambahkan.');
+}
     public function edit(Jenis $jenis)
     {
-        $this->authorize('update', $jenis);
+        $this->authorize('viewAny', Jenis::class);
 
-        // Ambil data jenis untuk dropdown (jika diperlukan)
-        $jenisList = Jenis::all();
-
-        return view('jenis.edit', compact('jenis', 'jenisList'));
+        return view('jenis.edit', compact('jenis'));
     }
 
-    /**
-     * Mengubah data jenis.
-     */
-    public function update(UpdateJenisRequest $request, Jenis $jenis)
+    public function update(Request $request, Jenis $jenis)
     {
-        $this->authorize('update', $jenis);
+        $this->authorize('viewAny', Jenis::class);
 
-        $dataReq = $request->validated();
+        $request->validate([
+            'nama_jenis' => 'required|string|max:255|unique:jenis,nama_jenis,' . $jenis->id,
+        ]);
 
-        $data = [
-            'user_id'    => Auth::id() ?? $jenis->user_id,
-            'nama_jenis' => $dataReq['nama_jenis'],
-        ];
+        $jenis->update($request->only('nama_jenis'));
 
-        $jenis->update($data);
-
-        return redirect()->route('jenis.index')
-            ->with('success', 'Jenis berhasil diperbarui.');
+        return redirect()->route('jenis.index')->with('success', 'Jenis berhasil diupdate.');
     }
 
-    /**
-     * Menghapus jenis dari database.
-     */
     public function destroy(Jenis $jenis)
     {
         $this->authorize('delete', $jenis);
 
-        if (!empty($jenis->foto) && Storage::disk('public')->exists($jenis->foto)) {
-            Storage::disk('public')->delete($jenis->foto);
+        if ($jenis->produk()->exists()) {
+            return back()->with('errors', 'Jenis tidak bisa dihapus karena masih dipakai produk.');
         }
 
         $jenis->delete();
 
-        return redirect()->route('jenis.index')
-            ->with('success', 'Jenis berhasil dihapus.');
+        return redirect()->route('jenis.index')->with('success', 'Jenis berhasil dihapus.');
     }
 }

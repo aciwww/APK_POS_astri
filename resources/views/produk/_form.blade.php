@@ -25,25 +25,6 @@
         </div>
     </div>
 
-<div class="mb-3">
-    <label class="form-label">Nama Jenis</label>
-    <select name="jenis_id" class="form-select @error('jenis_id') is-invalid @enderror">
-        <option value="">-- Pilih Jenis --</option>
-        @foreach($jenis as $item)
-            <option value="{{ $item->id }}"
-                @selected(old('jenis_id', $produk->jenis_id ?? '') == $item->id)>
-                {{ ucfirst($item->nama ?? $item->name) }}
-            </option>     
-        @endforeach
-    </select>
-    @error('jenis_id')
-        <div class="invalid-feedback">
-            {{ $message }}
-        </div>        
-    @enderror             
-</div>
-
-    
     <div class="col">
         <div class="mb-2">
             <label>Preview Foto</label><br>
@@ -51,6 +32,27 @@
         </div>
     </div>
 </div>   
+
+<!-- Jenis Produk -->
+            <div class="col-12">
+                <label for="jenis_id" class="form-label fw-semibold">Jenis Produk</label>
+                <select id="jenis_id" 
+                        name="jenis_id" 
+                        class="form-select @error('jenis_id') is-invalid @enderror">
+                    <option value="">-- Pilih Jenis --</option>
+                    @foreach($jenis as $j)
+                        <option value="{{ $j->id }}" 
+                            {{ old('jenis_id', $produk->jenis_id ?? '') == $j->id ? 'selected' : '' }}>
+                            {{ $j->nama_jenis }}
+                        </option>
+                    @endforeach
+                </select>
+                @error('jenis_id')
+                    <div class="invalid-feedback">
+                        {{ $message }}
+                    </div>
+                @enderror
+            </div>
 
 <div>
     <label>Nama Produk</label><br>
