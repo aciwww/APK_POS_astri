@@ -5,7 +5,12 @@
 @section('content')
 
 @include('layouts.navbar')
-
+<style>
+    .btn-primary {
+        background-color: #1C7C54;
+        border-color: #1C7C54;
+    }
+    </style>
 <div class="container my-4">
 
     <!-- Notifikasi Error -->
@@ -42,9 +47,9 @@
                            value="{{ request('search') }}" 
                            class="form-control border-end-0" 
                            placeholder="Cari berdasarkan nama jenis...">
-                    <button class="btn btn-primary px-4" type="submit">
-                        Cari
-                    </button>
+                     <button class="btn btn-outline-secondary" type="submit">
+                        Search
+                    </button> 
                     @if(request('search'))
                         <a href="{{ route('jenis.index') }}" class="btn btn-outline-secondary">Reset</a>
                     @endif

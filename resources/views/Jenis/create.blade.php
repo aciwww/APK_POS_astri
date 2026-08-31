@@ -6,8 +6,26 @@
 
 @include('layouts.navbar') 
 
-
-
+<style>
+    .btn-primary {
+        background-color: #1C7C54;
+        border-color: #1C7C54;
+    }
+    .btn-primary:hover {
+        background-color: #125439;
+        border-color: #125439;
+    }
+php
+    .btn-outline-secondary {
+        color: #1C7C54;
+        border-color: #1C7C54;
+    }
+    .btn-outline-secondary:hover {
+        background-color: #1C7C54;
+        border-color: #1C7C54;
+        color: #fff;
+    }
+</style>
 <div class="container py-4">
     <div class="row justify-content-center">
         <div class="col-md-6">
