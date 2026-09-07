@@ -69,9 +69,16 @@ CREATE TABLE IF NOT EXISTS `item_penjualan` (
   KEY `item_penjualan_produk_id_foreign` (`produk_id`),
   CONSTRAINT `item_penjualan_penjualan_id_foreign` FOREIGN KEY (`penjualan_id`) REFERENCES `penjualan` (`id`),
   CONSTRAINT `item_penjualan_produk_id_foreign` FOREIGN KEY (`produk_id`) REFERENCES `produk` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Dumping data for table pos_astri.item_penjualan: ~0 rows (approximately)
+-- Dumping data for table pos_astri.item_penjualan: ~2 rows (approximately)
+INSERT INTO `item_penjualan` (`id`, `penjualan_id`, `produk_id`, `kuantitas`, `harga_satuan`, `subtotal`, `created_at`, `updated_at`) VALUES
+	(1, 1, 4, 1, 450000, 450000, '2026-09-02 18:58:09', '2026-09-02 18:58:09'),
+	(2, 2, 3, 1, 550000, 550000, '2026-09-02 18:58:40', '2026-09-02 18:58:40'),
+	(3, 3, 3, 1, 550000, 550000, '2026-09-03 02:07:53', '2026-09-03 02:07:53'),
+	(4, 4, 4, 1, 450000, 450000, '2026-09-04 07:01:26', '2026-09-04 07:01:26'),
+	(5, 7, 4, 1, 450000, 450000, '2026-09-07 04:36:13', '2026-09-07 04:36:13'),
+	(6, 8, 4, 1, 450000, 450000, '2026-09-07 04:36:46', '2026-09-07 04:36:46');
 
 -- Dumping structure for table pos_astri.jenis
 CREATE TABLE IF NOT EXISTS `jenis` (
@@ -80,12 +87,13 @@ CREATE TABLE IF NOT EXISTS `jenis` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Dumping data for table pos_astri.jenis: ~0 rows (approximately)
+-- Dumping data for table pos_astri.jenis: ~3 rows (approximately)
 INSERT INTO `jenis` (`id`, `nama_jenis`, `created_at`, `updated_at`) VALUES
-	(1, 'baju', '2026-08-26 22:13:15', '2026-08-26 22:13:15'),
-	(2, 'dompet', '2026-08-31 00:41:16', '2026-08-31 00:41:16');
+	(2, 'dompet', '2026-08-31 00:41:16', '2026-08-31 00:41:16'),
+	(3, 'Sepatuu', '2026-09-01 00:00:06', '2026-09-01 00:00:06'),
+	(5, 'cardigan', '2026-09-07 06:45:28', '2026-09-07 06:45:28');
 
 -- Dumping structure for table pos_astri.jobs
 CREATE TABLE IF NOT EXISTS `jobs` (
@@ -127,7 +135,7 @@ CREATE TABLE IF NOT EXISTS `migrations` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Dumping data for table pos_astri.migrations: ~6 rows (approximately)
+-- Dumping data for table pos_astri.migrations: ~8 rows (approximately)
 INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 	(1, '0001_01_01_000000_create_roles_table', 1),
 	(2, '0001_01_01_000000_create_users_table', 1),
@@ -160,11 +168,17 @@ CREATE TABLE IF NOT EXISTS `penjualan` (
   PRIMARY KEY (`id`),
   KEY `penjualan_user_id_foreign` (`user_id`),
   CONSTRAINT `penjualan_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE RESTRICT
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Dumping data for table pos_astri.penjualan: ~0 rows (approximately)
+-- Dumping data for table pos_astri.penjualan: ~3 rows (approximately)
 INSERT INTO `penjualan` (`id`, `user_id`, `total_pembayaran`, `metode_pembayaran`, `status`, `created_at`, `updated_at`) VALUES
-	(1, 2, 0, 'CASH', 'OPEN', '2026-08-26 22:14:23', '2026-08-26 22:14:23');
+	(1, 2, 450000, 'CASH', 'COMPLETED', '2026-08-26 22:14:23', '2026-09-02 18:58:22'),
+	(2, 2, 550000, 'QRIS', 'COMPLETED', '2026-09-02 18:58:36', '2026-09-02 18:58:48'),
+	(3, 2, 550000, 'QRIS', 'COMPLETED', '2026-09-03 02:07:47', '2026-09-03 02:08:01'),
+	(4, 2, 450000, 'CASH', 'COMPLETED', '2026-09-03 02:15:57', '2026-09-04 07:01:36'),
+	(6, 3, 0, 'CASH', 'OPEN', '2026-09-07 03:59:39', '2026-09-07 03:59:39'),
+	(7, 2, 450000, 'CASH', 'COMPLETED', '2026-09-07 04:36:05', '2026-09-07 04:36:17'),
+	(8, 2, 450000, 'QRIS', 'COMPLETED', '2026-09-07 04:36:44', '2026-09-07 04:36:50');
 
 -- Dumping structure for table pos_astri.produk
 CREATE TABLE IF NOT EXISTS `produk` (
@@ -184,12 +198,13 @@ CREATE TABLE IF NOT EXISTS `produk` (
   KEY `produk_nama_index` (`nama`),
   CONSTRAINT `produk_jenis_id_foreign` FOREIGN KEY (`jenis_id`) REFERENCES `jenis` (`id`) ON DELETE CASCADE,
   CONSTRAINT `produk_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Dumping data for table pos_astri.produk: ~2 rows (approximately)
 INSERT INTO `produk` (`id`, `user_id`, `jenis_id`, `foto`, `nama`, `harga_beli`, `harga_jual`, `stok`, `created_at`, `updated_at`) VALUES
-	(1, 2, 1, 'products/KBQkr7aubWlIuCcMDk1gIREckCU71cRGXQuqATyf.jpg', 'baju pantai', 500000, 550000, 10, '2026-08-26 22:14:11', '2026-08-31 00:33:55'),
-	(3, 2, 2, 'products/0mvNovuQVwca9wsPiFrjJEJj6E0cqWHstj8LXiJq.jpg', 'dompet dior', 500000, 550000, 2, '2026-08-31 00:41:53', '2026-08-31 00:41:53');
+	(3, 2, 2, 'products/FOZrYSLyrFyuRZnSL56IdZ3MJRAmaynZF4jAG2kj.jpg', 'dompet dior', 500000, 550000, 6, '2026-08-31 00:41:53', '2026-09-07 06:49:53'),
+	(4, 2, 3, 'products/x8Zwoe7RfTEJykMdRZD7A5ukJPrHzQxSNF6xKA8a.jpg', 'Puma Spedcat', 500000, 450000, 6, '2026-09-01 00:00:47', '2026-09-07 04:36:46'),
+	(5, 2, 5, 'products/2BhkFCwE6GREZfUtfBHrThICJgYygVQ2mFcdrb9f.jpg', 'cardigan korea', 150000, 200000, 5, '2026-09-07 06:46:19', '2026-09-07 06:46:19');
 
 -- Dumping structure for table pos_astri.roles
 CREATE TABLE IF NOT EXISTS `roles` (
@@ -218,9 +233,9 @@ CREATE TABLE IF NOT EXISTS `sessions` (
   KEY `sessions_last_activity_index` (`last_activity`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Dumping data for table pos_astri.sessions: ~0 rows (approximately)
+-- Dumping data for table pos_astri.sessions: ~1 rows (approximately)
 INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
-	('CjxXZ343g5yqXmhH6CD48QpLR9UhXrmHaJ2cWgY0', 2, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoicHlwZDBDcjluVmZHcXRUR3lJVkozbHhpckxNWVJ4dFlMbG1Ua2VuRyI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJuZXciO2E6MDp7fXM6Mzoib2xkIjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6Mjg6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9wcm9kdWsiO3M6NToicm91dGUiO3M6MTI6InByb2R1ay5pbmRleCI7fXM6NTA6ImxvZ2luX3dlYl81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjI7fQ==', 1788162114);
+	('5LhHwHOYZtHbaL0HObXckpQFKxi08csDnUhyYz6u', 2, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiY1hTYWkwQndpWExhdEhGbTA3c01BRnQ0S3FaenZtQnprWU51UEMwOSI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJuZXciO2E6MDp7fXM6Mzoib2xkIjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6Mjg6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9wcm9kdWsiO3M6NToicm91dGUiO3M6MTI6InByb2R1ay5pbmRleCI7fXM6NTA6ImxvZ2luX3dlYl81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjI7fQ==', 1788763794);
 
 -- Dumping structure for table pos_astri.users
 CREATE TABLE IF NOT EXISTS `users` (
