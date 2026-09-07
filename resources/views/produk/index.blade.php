@@ -87,6 +87,19 @@
         @endcan 
     </div>
 
+    {{-- Pesan notifikasi (error / success) --}}
+    @if (session('error'))
+        <div class="alert alert-danger">
+            {{ session('error') }}
+        </div>
+    @endif
+
+    @if (session('success'))
+        <div class="alert alert-success">
+            {{ session('success') }}
+        </div>
+    @endif
+
     <!-- Form Pencarian -->
     <form action="{{ route('produk.index') }}" method="GET" class="mb-4">
         <div class="input-group">
@@ -116,9 +129,22 @@
                         <span class="text-muted small">No Image</span>
                     @endif
 
-                    <!-- Badge Stok -->
-                    <span class="badge bg-secondary position-absolute top-0 end-0 m-2">
-                        Stok: {{ $product->stok }}
+                    <!-- Badge Stok (otomatis berubah sesuai jumlah) -->
+                    @php
+                        $stok = $product->stok;
+                        if ($stok <= 0) {
+                            $badgeClass = 'bg-danger';
+                            $badgeText = 'Habis';
+                        } elseif ($stok <= 5) {
+                            $badgeClass = 'bg-warning text-dark';
+                            $badgeText = 'Menipis';
+                        } else {
+                            $badgeClass = 'bg-success';
+                            $badgeText = 'Tersedia';
+                        }
+                    @endphp
+                    <span class="badge {{ $badgeClass }} position-absolute top-0 end-0 m-2">
+                        {{ $badgeText }} ({{ $stok }})
                     </span>
                 </div>
 
