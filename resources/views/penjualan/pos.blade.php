@@ -4,6 +4,8 @@
 
 @section('content')
 
+@include('layouts.navbar')
+
 <style>
     body {
         background: linear-gradient(160deg, #E1F5EE 0%, #F7F5EE 45%, #E6F1FB 100%);
