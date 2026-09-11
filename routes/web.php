@@ -29,14 +29,16 @@ Route::middleware('auth')->group(function () {
         Route::delete('/users/destroy/{user}', [UserController::class, 'destroy'])->name('users.destroy');
      });
 
-Route::middleware('role:admin,kasir')->group(function () {
-    Route::resource('/produk', ProdukController::class);
-    Route::resource('/penjualan', PenjualanController::class);
-    Route::resource('/itempenjualan', ItemPenjualanController::class);
-     Route::resource('jenis', JenisController::class)->parameters([
-    'jenis' => 'jenis'
-    ]);
-    
-  });
-    
-}); 
+    Route::middleware('role:admin,kasir')->group(function () {
+        Route::resource('/produk', ProdukController::class);
+        Route::resource('/penjualan', PenjualanController::class);
+        Route::resource('/itempenjualan', ItemPenjualanController::class);
+        Route::resource('jenis', JenisController::class)->parameters([
+            'jenis' => 'jenis'
+        ]);
+
+        // TAMBAHAN: route halaman struk
+        Route::get('/penjualan/{sale}/struk', [PenjualanController::class, 'struk'])->name('penjualan.struk');
+    });
+
+});

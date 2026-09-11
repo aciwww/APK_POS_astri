@@ -175,26 +175,43 @@
         <div class="card-footer">
             <strong>Rp {{ number_format($sale->total_pembayaran) }}</strong>
 
-            <form method="POST" action="{{ route('penjualan.update', $sale->id) }}" onsubmit="return confirm('Yakin ingin checkout?')" class="mt-2">
-                @csrf 
-                @method('PUT')
-                <select name="payment_method" class="form-select mb-2">
-                    <option value="">Pilih Pembayaran</option>
-                    <option value="CASH">Cash</option>
-                    <option value="QRIS">QRIS</option>
-                </select>
+                    <form method="POST" action="{{ route('penjualan.update', $sale->id) }}" onsubmit="return validasiBayar()" class="mt-2">
+            @csrf 
+            @method('PUT')
 
-                <button class="btn btn-success w-100 {{ $sale->status === 'COMPLETED' ? 'disabled' : '' }}">
-                    Checkout
-                </button>
-            </form>
+            {{-- Tambahkan id="paymentMethod" dan event onchange --}}
+            <select name="payment_method" id="paymentMethod" class="form-select mb-2" onchange="toggleCashSection()">
+                <option value="">Pilih Pembayaran</option>
+                <option value="CASH">Cash</option>
+                <option value="QRIS">QRIS</option>
+            </select>
+
+            {{-- Bungkus input uang & kembalian dalam div #sectionCash dan beri style="display: none;" --}}
+            <div id="sectionCash" style="display: none;">
+                <div class="mb-2">
+                    <label class="fw-semibold small">Uang Dibayar</label>
+                    <input type="number" name="uang_dibayar" id="uangDibayar"
+                        class="form-control" placeholder="Masukkan jumlah uang"
+                        oninput="hitungKembalian()">
+                </div>
+
+                <div class="mb-2">
+                    <label class="fw-semibold small">Kembalian</label>
+                    <input type="text" id="kembalianTampil" class="form-control" readonly value="Rp 0">
+                </div>
+            </div>
+
+            <button class="btn btn-success w-100 {{ $sale->status === 'COMPLETED' ? 'disabled' : '' }}">
+                Checkout
+            </button>
+        </form>
             @can('delete', $sale)
             <form action="{{ route('penjualan.destroy', $sale->id) }}"
                     method="POST"
                     onsubmit="return confirm('Yakin ingin membatalkan transaksi?')">
                     @csrf 
                     @method('DELETE')
-                    <button class="btn btn-outline-danger w-100 m-2 {{ $sale->status === 'COMPLETED' ? 'disabled' : '' }}">
+                    <button class="btn btn-outline-danger w-100 mt-2 {{ $sale->status === 'COMPLETED' ? 'disabled' : '' }}">
                         Batal Transaksi
                     </button>
                 </form>
@@ -204,4 +221,56 @@
 </div>
 
 </div>
+
+{{-- ===== TAMBAHAN: Script hitung kembalian & validasi sebelum submit ===== --}}
+<script>
+    const totalBelanja = {{ $sale->total_pembayaran }};
+
+    // Fungsi untuk menampilkan/menyembunyikan input Cash
+    function toggleCashSection() {
+        let metode = document.getElementById('paymentMethod').value;
+        let sectionCash = document.getElementById('sectionCash');
+        let inputUang = document.getElementById('uangDibayar');
+
+        if (metode === 'CASH') {
+            sectionCash.style.display = 'block'; // Tampilkan input jika CASH
+            inputUang.value = '';
+            document.getElementById('kembalianTampil').value = 'Rp 0';
+        } else {
+            sectionCash.style.display = 'none';  // Sembunyikan jika QRIS / belum pilih
+            // Untuk QRIS, otomatis set nilai uang_dibayar = totalBelanja (uang pas)
+            inputUang.value = totalBelanja;
+        }
+    }
+
+    // Fungsi hitung kembalian
+    function hitungKembalian() {
+        let dibayar = parseFloat(document.getElementById('uangDibayar').value) || 0;
+        let kembali = dibayar - totalBelanja;
+        document.getElementById('kembalianTampil').value =
+            'Rp ' + (kembali > 0 ? kembali.toLocaleString('id-ID') : 0);
+    }
+
+    // Fungsi validasi form saat checkout
+    function validasiBayar() {
+        let metode = document.getElementById('paymentMethod').value;
+
+        if (!metode) {
+            alert('Pilih metode pembayaran terlebih dahulu!');
+            return false;
+        }
+
+        if (metode === 'CASH') {
+            let dibayar = parseFloat(document.getElementById('uangDibayar').value) || 0;
+            if (dibayar < totalBelanja) {
+                alert('Uang dibayar kurang dari total belanja!');
+                return false;
+            }
+        }
+
+        return confirm('Yakin ingin checkout?');
+    }
+</script>
+{{-- ===== AKHIR TAMBAHAN ===== --}}
+
 @endsection
