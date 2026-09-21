@@ -19,7 +19,9 @@ class Produk extends Model
         'nama',
         'harga_beli',
         'harga_jual',
-        'stok'
+        'stok',
+        'satuan',
+        'isi_per_satuan',
        
     ];
     public function user()

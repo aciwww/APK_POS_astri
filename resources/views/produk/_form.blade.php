@@ -101,6 +101,36 @@
           @enderror
 </div>
 
+<div>
+    <label>Satuan</label><br>
+    <select name="unit"
+            class="form-control @error('unit') is-invalid @enderror">
+        <option value="">-- Pilih Satuan --</option>
+        <option value="pcs" {{ old('unit', $produk->satuan ?? '') == 'pcs' ? 'selected' : '' }}>Pcs</option>
+        <option value="lusin" {{ old('unit', $produk->satuan ?? '') == 'lusin' ? 'selected' : '' }}>Lusin</option>
+        <option value="pack" {{ old('unit', $produk->satuan ?? '') == 'pack' ? 'selected' : '' }}>Pack</option>
+        <option value="set" {{ old('unit', $produk->satuan ?? '') == 'set' ? 'selected' : '' }}>Set</option>
+        <option value="meter" {{ old('unit', $produk->satuan ?? '') == 'meter' ? 'selected' : '' }}>Meter</option>
+    </select>
+    @error('unit')
+        <div class="invalid-feedback">
+            {{ $message }}
+        </div>
+    @enderror
+</div>
+
+<div>
+    <label>Isi per Satuan (dalam pcs)</label><br>
+    <input type="number" name="content_per_unit" min="1"
+           class="form-control @error('content_per_unit') is-invalid @enderror"
+           value="{{ old('content_per_unit', $produk->isi_per_satuan ?? 1) }}">
+    @error('content_per_unit')
+        <div class="invalid-feedback">
+            {{ $message }}
+        </div>
+    @enderror
+</div>
+
 <button class="btn btn-success mt-3" type="submit">Simpan</button>
 
 <script>

@@ -29,6 +29,8 @@ class StoreRequest extends FormRequest
             'purchase_price' => 'required|integer|min:0',
             'selling_price'  => 'required|integer|min:0',
             'stock'          => 'required|integer|min:0',
+            'unit'           => 'required|string|max:20',
+            'content_per_unit' => 'required|integer|min:1',
         ];
     }
 
@@ -47,6 +49,9 @@ class StoreRequest extends FormRequest
             'selling_price.integer'   => 'Harga jual harus diisi bilangan bulat.',
             'stock.required'          => 'Stok wajib diisi.',
             'stock.integer'           => 'Stok harus diisi angka.',
+            'unit.required'           => 'Satuan wajib dipilih.',
+            'content_per_unit.required' => 'Isi per satuan wajib diisi.', 
+
         ];
     }
 }

@@ -42,7 +42,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/penjualan/rekap-mingguan', [PenjualanController::class, 'rekapMingguan'])->name('penjualan.rekap');
         Route::get('/penjualan/{id}/print', [PenjualanController::class, 'print'])->name('penjualan.print');
 
-        // ROUTE RESOURCE PENJUALAN (satu kali saja)
+        // ROUTE RESOURCE PENJUALAN 
         Route::resource('/penjualan', PenjualanController::class);
 
         Route::resource('/itempenjualan', ItemPenjualanController::class);

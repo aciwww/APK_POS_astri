@@ -63,6 +63,8 @@ class ProdukController extends Controller
         $data['harga_beli'] = $dataReq['purchase_price'];
         $data['harga_jual'] = $dataReq['selling_price'];
         $data['stok'] = $dataReq['stock'] ?? 0;
+        $data['satuan'] = $dataReq['unit'];
+        $data['isi_per_satuan'] = $dataReq['content_per_unit'];
 
         if ($request->hasFile('foto')) {
             $data['foto'] = $request->file('foto')->store('products', 'public');
@@ -109,6 +111,8 @@ class ProdukController extends Controller
             'harga_beli' => $dataReq['purchase_price'],
             'harga_jual' => $dataReq['selling_price'],
             'stok'       => $dataReq['stock'],
+            'satuan' => $dataReq['unit'],
+            'isi_per_satuan' => $dataReq['content_per_unit'],
         ];
 
         if ($request->hasFile('foto')) {

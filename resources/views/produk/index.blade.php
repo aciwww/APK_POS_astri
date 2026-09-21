@@ -94,12 +94,6 @@
         </div>
     @endif
 
-    @if (session('success'))
-        <div class="alert alert-success">
-            {{ session('success') }}
-        </div>
-    @endif
-
     <!-- Form Pencarian -->
     <form action="{{ route('produk.index') }}" method="GET" class="mb-4">
         <div class="input-group">
@@ -158,6 +152,10 @@
                     <!-- 2. Nama Jenis (di bawah nama produk) -->
                     <small class="fw-semibold mb-2" style="font-size: 0.8rem;">
                         {{ $product->jenis->nama_jenis ?? 'Tanpa Jenis' }}
+                    </small>
+
+                    <small class="text-muted mb-2 d-block" style="font-size: 0.75rem;">
+                        {{ $product->stok }} {{ $product->satuan }}
                     </small>
                     
                     <div class="mt-auto">
